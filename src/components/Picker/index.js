@@ -1,19 +1,26 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { PropTypes } from 'prop-types';
-import styled from 'styled-components';
 import { DownOutlined } from '@ant-design/icons';
 import { Dropdown, Typography } from 'antd';
-import { DEFAULT_OPTIONS, EMPTY_OPTION } from './constant';
-
-const { Text } = Typography;
+import { DropdownButton } from './DropdownButton';
+import { Option, OptionType } from './Option';
+import { DEFAULT_OPTIONS, EMPTY_OPTION, CUSTOM_OPTION } from './constant';
 
 export const Picker = ({
   options = DEFAULT_OPTIONS,
   onChange,
   value,
   enableEmptySelection = true,
+  enableCustomDate = true,
 }) => {
   const [selectedOption, setSelectedOption] = useState(value);
+
+  useEffect(() => setSelectedOption(value), [value]);
+
+  const onClick = (newSelectedOption) => {
+    setSelectedOption(newSelectedOption);
+    onChange && onChange(newSelectedOption);
+  };
 
   const items = useMemo(() => {
     let res = options;
@@ -22,58 +29,34 @@ export const Picker = ({
       res = [EMPTY_OPTION, ...res];
     }
 
-    return res;
-  }, [options, enableEmptySelection]);
+    if (enableCustomDate) {
+      res = [...res, CUSTOM_OPTION];
+    }
 
-  useEffect(() => setSelectedOption(value), [value]);
-
-  const onClick = (e) => {
-    const newSelectedOption = options.find((option) => option.key === e.key);
-    setSelectedOption(newSelectedOption);
-    onChange && onChange(newSelectedOption);
-  };
+    return res.map((option) => {
+      return {
+        ...option,
+        label: <Option key={option.key} option={option} onClick={onClick} />,
+      };
+    });
+  }, [options, enableEmptySelection, enableCustomDate]);
 
   return (
-    <Dropdown
-      menu={{
-        items,
-        onClick,
-      }}
-      trigger={['click']}
-    >
+    <Dropdown menu={{ items }} trigger={['click']}>
       <DropdownButton>
-        <Text>{selectedOption?.label || EMPTY_OPTION.label}</Text>
+        <Typography.Text>
+          {selectedOption?.label || EMPTY_OPTION.label}
+        </Typography.Text>
         <DownOutlined />
       </DropdownButton>
     </Dropdown>
   );
 };
 
-const optionType = PropTypes.shape({
-  key: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
-  value: PropTypes.number.isRequired,
-});
-
 Picker.propTypes = {
-  options: PropTypes.arrayOf(optionType),
+  options: PropTypes.arrayOf(OptionType),
   onChange: PropTypes.func,
-  value: optionType,
+  value: OptionType,
   enableEmptySelection: PropTypes.bool,
+  enableCustomDate: PropTypes.bool,
 };
-
-const DropdownButton = styled.button`
-  background-color: #ffffff;
-  display: inline-flex;
-  padding: 0 12px;
-  justify-content: space-between;
-  align-items: center;
-  border: 1px solid rgba(2, 9, 28, 0.28);
-  border-radius: 4px;
-  min-width: 150px;
-  min-height: 40px;
-
-  &:focus {
-    cursor: pointer;
-  }
-`;
