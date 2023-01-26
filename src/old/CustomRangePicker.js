@@ -1,6 +1,8 @@
 import React, { useState, useCallback } from 'react';
 import { DatePicker } from 'antd';
 import moment from 'moment';
+import { PropTypes } from 'prop-types';
+
 const { RangePicker } = DatePicker;
 
 const range = (start, end) => {
@@ -127,4 +129,11 @@ const CustomRangePicker = ({
     />
   );
 };
+
+CustomRangePicker.propTypes = {
+  onCalendarChange: PropTypes.string,
+  maxHours: PropTypes.string,
+  defaultValue: PropTypes.string,
+};
+
 export default CustomRangePicker;

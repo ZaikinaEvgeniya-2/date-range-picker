@@ -1,3 +1,4 @@
+import React from 'react';
 import { Picker } from './components';
 import { CustomDaysDropdown } from './old';
 import './App.css';

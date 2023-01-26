@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Dropdown, Menu, Typography } from 'antd';
+import { PropTypes } from 'prop-types';
 import styled from 'styled-components';
 import { DownOutlined, CloseOutlined } from '@ant-design/icons';
 import { capitalize, isArray, toString } from 'lodash';
@@ -195,6 +196,20 @@ function Component({
     </div>
   );
 }
+
+Component.propTypes = {
+  onSendFile: PropTypes.func,
+
+  className: PropTypes.string,
+  options: PropTypes.string,
+  onChange: PropTypes.string,
+  enableCustomDate: PropTypes.string,
+  enableEmptySelection: PropTypes.string,
+
+  defaultValue: PropTypes.string,
+
+  value: PropTypes.string,
+};
 
 const CustomDaysDropdown = styled(Component)`
   .dropdownContainer {
