@@ -11,18 +11,18 @@ export const DropdownPicker = ({
   placeholder,
   onClick,
 }) => {
-  const items = useMemo(() => {
-    return options.map((option) => {
-      return {
-        ...option,
-        label: (
-          <div onClick={() => onClick(option)}>
-            <Typography.Text>{option.label}</Typography.Text>
-          </div>
-        ),
-      };
-    });
-  }, [options]);
+  const getClickableItem = (option) => {
+    return {
+      ...option,
+      label: (
+        <div onClick={() => onClick(option)}>
+          <Typography.Text>{option.label}</Typography.Text>
+        </div>
+      ),
+    };
+  };
+
+  const items = useMemo(() => options.map(getClickableItem), [options]);
 
   return (
     <Dropdown menu={{ items }} trigger={['click']}>
