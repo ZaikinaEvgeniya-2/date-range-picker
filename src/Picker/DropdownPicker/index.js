@@ -1,9 +1,11 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { PropTypes } from 'prop-types';
 import styled from 'styled-components';
 import { DownOutlined } from '@ant-design/icons';
 import { Dropdown, Typography } from 'antd';
 import { OptionType } from '../types';
+
+const { Text } = Typography;
 
 export const DropdownPicker = ({
   options,
@@ -11,16 +13,16 @@ export const DropdownPicker = ({
   placeholder,
   onClick,
 }) => {
-  const getClickableItem = (option) => {
+  const getClickableItem = useCallback((option) => {
     return {
       ...option,
       label: (
         <div onClick={() => onClick(option)}>
-          <Typography.Text>{option.label}</Typography.Text>
+          <Text>{option.label}</Text>
         </div>
       ),
     };
-  };
+  }, []);
 
   const items = useMemo(() => options.map(getClickableItem), [options]);
 
