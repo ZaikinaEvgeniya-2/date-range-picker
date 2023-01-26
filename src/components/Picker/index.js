@@ -1,18 +1,31 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { PropTypes } from 'prop-types';
 import styled from 'styled-components';
 import { DownOutlined } from '@ant-design/icons';
 import { Dropdown, Typography } from 'antd';
-import { DEFAULT_OPTIONS, PLACEHOLDER } from './constant';
+import { DEFAULT_OPTIONS, EMPTY_OPTION } from './constant';
 
 const { Text } = Typography;
 
 export const Picker = ({
   options = DEFAULT_OPTIONS,
-  placeholder = PLACEHOLDER,
-  onChange = undefined,
+  onChange,
+  value,
+  enableEmptySelection = true,
 }) => {
-  const [selectedOption, setSelectedOption] = useState();
+  const [selectedOption, setSelectedOption] = useState(value);
+
+  const items = useMemo(() => {
+    let res = options;
+
+    if (enableEmptySelection) {
+      res = [EMPTY_OPTION, ...res];
+    }
+
+    return res;
+  }, [options, enableEmptySelection]);
+
+  useEffect(() => setSelectedOption(value), [value]);
 
   const onClick = (e) => {
     const newSelectedOption = options.find((option) => option.key === e.key);
@@ -23,29 +36,30 @@ export const Picker = ({
   return (
     <Dropdown
       menu={{
-        items: options,
+        items,
         onClick,
       }}
       trigger={['click']}
     >
       <DropdownButton>
-        <Text>{selectedOption?.label || placeholder}</Text>
+        <Text>{selectedOption?.label || EMPTY_OPTION.label}</Text>
         <DownOutlined />
       </DropdownButton>
     </Dropdown>
   );
 };
 
+const optionType = PropTypes.shape({
+  key: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  value: PropTypes.number.isRequired,
+});
+
 Picker.propTypes = {
-  options: PropTypes.arrayOf(
-    PropTypes.shape({
-      key: PropTypes.string.isRequired,
-      label: PropTypes.string.isRequired,
-      value: PropTypes.number.isRequired,
-    })
-  ),
-  placeholder: PropTypes.string,
+  options: PropTypes.arrayOf(optionType),
   onChange: PropTypes.func,
+  value: optionType,
+  enableEmptySelection: PropTypes.bool,
 };
 
 const DropdownButton = styled.button`
