@@ -202,9 +202,9 @@ Component.propTypes = {
 
   className: PropTypes.string,
   options: PropTypes.string,
-  onChange: PropTypes.string,
+  onChange: PropTypes.func,
   enableCustomDate: PropTypes.string,
-  enableEmptySelection: PropTypes.string,
+  enableEmptySelection: PropTypes.bool,
 
   defaultValue: PropTypes.string,
 
