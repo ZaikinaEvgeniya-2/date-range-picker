@@ -1,6 +1,7 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
 import { Typography } from 'antd';
+import { OptionType } from '../types';
 
 export const Option = ({ option, onClick }) => {
   return (
@@ -9,12 +10,6 @@ export const Option = ({ option, onClick }) => {
     </div>
   );
 };
-
-export const OptionType = PropTypes.shape({
-  key: PropTypes.string.isRequired,
-  value: PropTypes.number,
-  label: PropTypes.string.isRequired,
-});
 
 Option.propTypes = {
   option: OptionType,
