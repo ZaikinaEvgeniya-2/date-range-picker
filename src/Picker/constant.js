@@ -29,6 +29,8 @@ export const EMPTY_OPTION = {
 
 export const CUSTOM_OPTION = {
   key: 'custom',
-  value: undefined,
+  value: [],
   label: 'Custom',
 };
+
+export const MAX_HOURS_DIFF = 168;
