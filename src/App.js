@@ -14,7 +14,16 @@ export const App = () => {
 
   return (
     <div style={{ width: '400px' }}>
-      <Picker value={value} onChange={onChange} />
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'flex-end',
+        }}
+      >
+        <Picker value={value} onChange={onChange} />
+      </div>
+
       <CustomDaysDropdown />
     </div>
   );
