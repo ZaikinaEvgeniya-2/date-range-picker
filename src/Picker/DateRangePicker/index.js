@@ -82,6 +82,7 @@ export const DateRangePicker = ({
   return (
     <Container>
       <DatePicker
+        placeholder="Start date"
         value={startDate}
         onChange={onStartDateChange}
         disabledDate={disabledStartDate}
@@ -93,6 +94,7 @@ export const DateRangePicker = ({
       />
       <SwapRightOutlined style={iconStyle} />
       <DatePicker
+        placeholder="End date"
         value={endDate}
         onChange={onEndDateChange}
         disabledDate={disabledEndDate}
