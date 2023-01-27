@@ -13,18 +13,24 @@ export const DropdownPicker = ({
   placeholder,
   onSelect,
 }) => {
-  const getSelectableItem = useCallback((option) => {
-    return {
-      ...option,
-      label: (
-        <div onClick={() => onSelect(option)}>
-          <Text>{option.label}</Text>
-        </div>
-      ),
-    };
-  }, []);
+  const getSelectableItem = useCallback(
+    (option) => {
+      return {
+        ...option,
+        label: (
+          <div onClick={() => onSelect(option)}>
+            <Text>{option.label}</Text>
+          </div>
+        ),
+      };
+    },
+    [onSelect]
+  );
 
-  const items = useMemo(() => options.map(getSelectableItem), [options]);
+  const items = useMemo(
+    () => options.map(getSelectableItem),
+    [getSelectableItem, options]
+  );
 
   return (
     <Dropdown menu={{ items }} trigger={['click']}>

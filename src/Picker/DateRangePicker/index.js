@@ -12,8 +12,8 @@ import { MAX_HOURS_DIFF } from '../constant';
 import { DateRangeType } from '../types';
 import {
   useDateRangePicker,
-  parseStrToDate,
-  parseDateToStr,
+  convertStrToDate,
+  convertDateToStr,
 } from './useDateRangePicker';
 
 export const DateRangePicker = ({
@@ -23,13 +23,13 @@ export const DateRangePicker = ({
   showTime = true,
   onClose,
 }) => {
-  const [startDate, setStartDate] = useState(parseStrToDate(value[0]));
-  const [endDate, setEndDate] = useState(parseStrToDate(value[1]));
+  const [startDate, setStartDate] = useState(convertStrToDate(value[0]));
+  const [endDate, setEndDate] = useState(convertStrToDate(value[1]));
 
   useEffect(() => {
-    setStartDate(parseStrToDate(value[0]));
-    setEndDate(parseStrToDate(value[1]));
-  }, [value]);
+    setStartDate(convertStrToDate(value[0]));
+    setEndDate(convertStrToDate(value[1]));
+  }, [value?.[0], value?.[1]]);
 
   const {
     disabledStartDate,
@@ -45,6 +45,15 @@ export const DateRangePicker = ({
     getMaxEndDate,
   } = useDateRangePicker({ startDate, endDate, maxHoursDiff });
 
+  const onRangeChange = useCallback(
+    (startDate, endDate) => {
+      if (!onChange || !startDate || !endDate) return;
+
+      onChange([convertDateToStr(startDate), convertDateToStr(endDate)]);
+    },
+    [onChange]
+  );
+
   const onStartDateChange = useCallback(
     (newStartDate) => {
       const res = startDateLimited(newStartDate)
@@ -54,7 +63,7 @@ export const DateRangePicker = ({
       setStartDate(res);
       onRangeChange(res, endDate);
     },
-    [endDate]
+    [endDate, getMaxStartDate, onRangeChange, startDateLimited]
   );
 
   const onEndDateChange = useCallback(
@@ -64,14 +73,8 @@ export const DateRangePicker = ({
       setEndDate(res);
       onRangeChange(startDate, res);
     },
-    [startDate]
+    [endDateLimited, getMaxEndDate, onRangeChange, startDate]
   );
-
-  const onRangeChange = useCallback((startDate, endDate) => {
-    if (!onChange || !startDate || !endDate) return;
-
-    onChange([parseDateToStr(startDate), parseDateToStr(endDate)]);
-  }, []);
 
   const onClear = () => {
     setStartDate();

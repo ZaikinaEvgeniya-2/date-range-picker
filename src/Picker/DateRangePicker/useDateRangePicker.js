@@ -23,7 +23,7 @@ export const useDateRangePicker = ({ startDate, endDate, maxHoursDiff }) => {
         return false;
       }
     },
-    [endDate]
+    [endDate, maxHoursDiff]
   );
 
   const disabledEndDate = useCallback(
@@ -44,7 +44,7 @@ export const useDateRangePicker = ({ startDate, endDate, maxHoursDiff }) => {
         return false;
       }
     },
-    [startDate]
+    [startDate, maxHoursDiff]
   );
 
   const disabledStartTime = useCallback(
@@ -55,6 +55,7 @@ export const useDateRangePicker = ({ startDate, endDate, maxHoursDiff }) => {
 
         const maxDate = endDate.clone().add(maxHoursDiff, 'hours');
 
+        // missing min day time
         return {
           disabledHours: () => range(0, 24).splice(maxDate.hour() + 1, 24),
           disabledMinutes: () => range(0, 60).splice(maxDate.minute() + 1, 60),
@@ -65,7 +66,7 @@ export const useDateRangePicker = ({ startDate, endDate, maxHoursDiff }) => {
         return false;
       }
     },
-    [endDate]
+    [endDate, maxHoursDiff]
   );
 
   const disabledEndTime = useCallback(
@@ -76,6 +77,7 @@ export const useDateRangePicker = ({ startDate, endDate, maxHoursDiff }) => {
 
         const minDate = startDate.clone().subtract(maxHoursDiff, 'hours');
 
+        // missing max day time
         return {
           disabledHours: () => range(0, 24).splice(0, minDate.hour()),
           disabledMinutes: () => range(0, 60).splice(0, minDate.minute()),
@@ -86,7 +88,7 @@ export const useDateRangePicker = ({ startDate, endDate, maxHoursDiff }) => {
         return false;
       }
     },
-    [startDate]
+    [startDate, maxHoursDiff]
   );
 
   const startDateLimited = useCallback(
@@ -148,12 +150,12 @@ const range = (start, end) => {
   return result;
 };
 
-export const parseStrToDate = (str) => {
+export const convertStrToDate = (str) => {
   if (!str) return;
   return moment.unix(Number(str));
 };
 
-export const parseDateToStr = (date) => {
+export const convertDateToStr = (date) => {
   if (!date) return;
   return toString(moment(date).unix());
 };

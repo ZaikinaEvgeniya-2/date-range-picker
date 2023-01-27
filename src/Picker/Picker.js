@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { PropTypes } from 'prop-types';
 import { DEFAULT_OPTIONS, EMPTY_OPTION, CUSTOM_OPTION } from './constant';
 import { OptionType } from './types';
@@ -15,20 +15,28 @@ export const Picker = ({
 }) => {
   const [selectedOption, setSelectedOption] = useState(value);
 
-  useEffect(() => setSelectedOption(value), [value]);
+  useEffect(() => {
+    setSelectedOption(value);
+  }, [value?.value]);
 
-  const onSelect = (newSelectedOption) => {
-    setSelectedOption(newSelectedOption);
-    onChange && onChange(newSelectedOption?.value, newSelectedOption);
-  };
+  const onSelect = useCallback(
+    (newSelectedOption) => {
+      setSelectedOption(newSelectedOption);
+      onChange && onChange(newSelectedOption?.value, newSelectedOption);
+    },
+    [onChange]
+  );
 
-  const onCustomDateSelect = (dateRange) => {
-    onSelect({ ...CUSTOM_OPTION, value: dateRange });
-  };
+  const onCustomDateSelect = useCallback(
+    (dateRange) => {
+      onSelect({ ...CUSTOM_OPTION, value: dateRange });
+    },
+    [onSelect]
+  );
 
-  const onClear = () => {
+  const onClear = useCallback(() => {
     onSelect();
-  };
+  }, [onSelect]);
 
   const items = useMemo(() => {
     let res = options;
@@ -42,14 +50,9 @@ export const Picker = ({
     }
 
     return res;
-  }, [options, enableEmptySelection, enableCustomDate]);
+  }, [enableCustomDate, enableEmptySelection, options]);
 
-  const isCustomDate = useMemo(
-    () => selectedOption?.key === CUSTOM_OPTION.key,
-    [selectedOption]
-  );
-
-  if (isCustomDate) {
+  if (selectedOption?.key === CUSTOM_OPTION.key) {
     return (
       <DateRangePicker
         value={selectedOption?.value}
