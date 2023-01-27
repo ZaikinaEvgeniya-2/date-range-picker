@@ -11,13 +11,10 @@ import {
 import { MAX_HOURS_DIFF } from '../constant';
 import { DateRangeType } from '../types';
 import {
+  useDateRangePicker,
   parseStrToDate,
   parseDateToStr,
-  checkStartDate,
-  checkEndDate,
-  checkStartTime,
-  checkEndTime,
-} from './utils';
+} from './useDateRangePicker';
 
 export const DateRangePicker = ({
   value,
@@ -34,76 +31,43 @@ export const DateRangePicker = ({
     setEndDate(parseStrToDate(value[1]));
   }, [value]);
 
-  const disabledStartDate = useCallback(
-    (current) => checkStartDate({ current, endDate, maxHoursDiff }),
-    [endDate]
-  );
+  const {
+    disabledStartDate,
+    disabledEndDate,
 
-  const disabledEndDate = useCallback(
-    (current) => checkEndDate({ current, startDate, maxHoursDiff }),
-    [startDate]
-  );
+    disabledStartTime,
+    disabledEndTime,
 
-  const disabledStartTime = useCallback(
-    (current) => checkStartTime({ current, endDate, maxHoursDiff }),
-    [endDate]
-  );
+    startDateLimited,
+    endDateLimited,
 
-  const disabledEndTime = useCallback(
-    (current) => checkEndTime({ current, startDate, maxHoursDiff }),
-    [startDate]
-  );
+    getMaxStartDate,
+    getMaxEndDate,
+  } = useDateRangePicker({ startDate, endDate, maxHoursDiff });
 
   const onStartDateChange = useCallback(
     (newStartDate) => {
-      let res = startDateLimited(newStartDate)
+      const res = startDateLimited(newStartDate)
         ? getMaxStartDate()
         : newStartDate;
+
       setStartDate(res);
-      onDateChange(res, endDate);
+      onRangeChange(res, endDate);
     },
     [endDate]
   );
 
   const onEndDateChange = useCallback(
     (newEndDate) => {
-      let res = endDateLimited(newEndDate) ? getMaxEndDate() : newEndDate;
+      const res = endDateLimited(newEndDate) ? getMaxEndDate() : newEndDate;
 
       setEndDate(res);
-      onDateChange(startDate, res);
+      onRangeChange(startDate, res);
     },
     [startDate]
   );
 
-  const startDateLimited = useCallback(
-    (newStartDate) => {
-      return (
-        endDate &&
-        (newStartDate.isAfter(endDate) || newStartDate.isSame(endDate))
-      );
-    },
-    [endDate]
-  );
-
-  const endDateLimited = useCallback(
-    (newEndDate) => {
-      return (
-        startDate &&
-        (newEndDate.isBefore(startDate) || newEndDate.isSame(startDate))
-      );
-    },
-    [startDate]
-  );
-
-  const getMaxStartDate = useCallback(() => {
-    return endDate.clone().subtract(1, 'second');
-  }, [endDate]);
-
-  const getMaxEndDate = useCallback(() => {
-    return startDate.clone().add(1, 'second');
-  }, [startDate]);
-
-  const onDateChange = useCallback((startDate, endDate) => {
+  const onRangeChange = useCallback((startDate, endDate) => {
     if (!onChange || !startDate || !endDate) return;
 
     onChange([parseDateToStr(startDate), parseDateToStr(endDate)]);
@@ -112,6 +76,7 @@ export const DateRangePicker = ({
   const onClear = () => {
     setStartDate();
     setEndDate();
+    onChange([]);
   };
 
   return (
