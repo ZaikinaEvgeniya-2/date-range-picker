@@ -19,7 +19,7 @@ export const Picker = ({
 
   const onSelect = (newSelectedOption) => {
     setSelectedOption(newSelectedOption);
-    onChange && onChange(newSelectedOption);
+    onChange && onChange(newSelectedOption?.value, newSelectedOption);
   };
 
   const onCustomDateSelect = (dateRange) => {
@@ -72,8 +72,8 @@ export const Picker = ({
 
 Picker.propTypes = {
   options: PropTypes.arrayOf(OptionType),
-  onChange: PropTypes.func,
   value: OptionType,
+  onChange: PropTypes.func,
   enableEmptySelection: PropTypes.bool,
   enableCustomDate: PropTypes.bool,
 };
