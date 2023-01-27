@@ -147,6 +147,29 @@ const Container = styled.div`
   border: 1px solid rgba(2, 9, 28, 0.28);
   border-radius: 4px;
   padding: 0;
+  width: fit-content;
+  padding: 0 5px;
+
+  .ant-picker {
+    border: none;
+    border-bottom: 2px solid transparent;
+    transition: border-bottom-color 0.3s;
+
+    &:hover,
+    &:focus,
+    &.ant-picker-focused {
+      box-shadow: none;
+    }
+
+    &:hover,
+    &:focus {
+      border-bottom: 2px solid transparent;
+    }
+
+    &.ant-picker-focused {
+      border-bottom: 2px solid #1890ff;
+    }
+  }
 `;
 
 const PickerButtons = styled.div`
