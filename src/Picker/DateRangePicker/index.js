@@ -8,6 +8,8 @@ import {
   parseDateToStr,
   checkStartDate,
   checkEndDate,
+  checkStartTime,
+  checkEndTime,
 } from './utils';
 
 export const DateRangePicker = ({
@@ -34,37 +36,69 @@ export const DateRangePicker = ({
     [startDate]
   );
 
-  const onStartDateChange = (newStartDate) => {
-    setStartDate(newStartDate);
-    onDateChange(newStartDate, endDate);
-  };
+  const disabledStartTime = useCallback(
+    (current) => checkStartTime({ current, endDate, maxHoursDiff }),
+    [endDate]
+  );
 
-  const onEndDateChange = (newEndDate) => {
-    setEndDate(newEndDate);
-    onDateChange(startDate, newEndDate);
-  };
+  const disabledEndTime = useCallback(
+    (current) => checkEndTime({ current, startDate, maxHoursDiff }),
+    [startDate]
+  );
 
-  const onDateChange = (startDate, endDate) => {
+  const onStartDateChange = useCallback(
+    (newStartDate) => {
+      let res = newStartDate;
+
+      if (!newStartDate.isBefore(endDate)) {
+        res = endDate.clone().subtract(1, 'second');
+      }
+
+      setStartDate(res);
+      onDateChange(res, endDate);
+    },
+    [endDate]
+  );
+
+  const onEndDateChange = useCallback(
+    (newEndDate) => {
+      let res = newEndDate;
+
+      if (!newEndDate.isAfter(startDate)) {
+        res = startDate.clone().add(1, 'second');
+      }
+
+      setEndDate(res);
+      onDateChange(startDate, res);
+    },
+    [startDate]
+  );
+
+  const onDateChange = useCallback((startDate, endDate) => {
     if (!onChange || !startDate || !endDate) return;
 
     onChange([parseDateToStr(startDate), parseDateToStr(endDate)]);
-  };
+  }, []);
 
   return (
     <>
       <DatePicker
-        disabledDate={disabledStartDate}
-        onChange={onStartDateChange}
         value={startDate}
+        onChange={onStartDateChange}
+        disabledDate={disabledStartDate}
+        disabledTime={disabledStartTime}
         showTime={showTime}
         showNow={false}
+        allowClear={false}
       />
       <DatePicker
-        disabledDate={disabledEndDate}
-        onChange={onEndDateChange}
         value={endDate}
+        onChange={onEndDateChange}
+        disabledDate={disabledEndDate}
+        disabledTime={disabledEndTime}
         showTime={showTime}
         showNow={false}
+        allowClear={false}
       />
     </>
   );
