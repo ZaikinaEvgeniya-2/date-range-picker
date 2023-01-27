@@ -11,20 +11,20 @@ export const DropdownPicker = ({
   options,
   selectedOption,
   placeholder,
-  onClick,
+  onSelect,
 }) => {
-  const getClickableItem = useCallback((option) => {
+  const getSelectableItem = useCallback((option) => {
     return {
       ...option,
       label: (
-        <div onClick={() => onClick(option)}>
+        <div onClick={() => onSelect(option)}>
           <Text>{option.label}</Text>
         </div>
       ),
     };
   }, []);
 
-  const items = useMemo(() => options.map(getClickableItem), [options]);
+  const items = useMemo(() => options.map(getSelectableItem), [options]);
 
   return (
     <Dropdown menu={{ items }} trigger={['click']}>
@@ -42,12 +42,12 @@ DropdownPicker.propTypes = {
   options: PropTypes.arrayOf(OptionType),
   selectedOption: OptionType,
   placeholder: PropTypes.string,
-  onClick: PropTypes.func.isRequired,
+  onSelect: PropTypes.func.isRequired,
 };
 
 const DropdownButton = styled.button`
   background-color: #ffffff;
-  display: inline-flex;
+  display: flex;
   padding: 0 12px;
   justify-content: space-between;
   align-items: center;

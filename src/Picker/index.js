@@ -23,10 +23,11 @@ export const Picker = ({
   };
 
   const onCustomDateSelect = (dateRange) => {
-    onSelect({
-      ...CUSTOM_OPTION,
-      value: dateRange,
-    });
+    onSelect({ ...CUSTOM_OPTION, value: dateRange });
+  };
+
+  const onClear = () => {
+    onSelect();
   };
 
   const items = useMemo(() => {
@@ -53,6 +54,7 @@ export const Picker = ({
       <DateRangePicker
         value={selectedOption?.value}
         onChange={onCustomDateSelect}
+        onClose={onClear}
         {...props}
       />
     );
@@ -63,7 +65,7 @@ export const Picker = ({
       options={items}
       selectedOption={selectedOption}
       placeholder={EMPTY_OPTION.label}
-      onClick={onSelect}
+      onSelect={onSelect}
     />
   );
 };
