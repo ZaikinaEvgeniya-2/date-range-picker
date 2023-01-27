@@ -49,7 +49,7 @@ export const checkEndDate = ({ current, startDate, maxHoursDiff }) => {
 
 export const checkStartTime = ({ current, endDate, maxHoursDiff }) => {
   try {
-    if (!current || !endDate || !maxHoursDiff) return false;
+    if (!current || !endDate) return false;
     if (!current.isSame(endDate, 'day')) return false;
 
     const maxDate = endDate.clone().add(maxHoursDiff, 'hours');
@@ -67,7 +67,7 @@ export const checkStartTime = ({ current, endDate, maxHoursDiff }) => {
 
 export const checkEndTime = ({ current, startDate, maxHoursDiff }) => {
   try {
-    if (!current || !startDate || !maxHoursDiff) return false;
+    if (!current || !startDate) return false;
     if (!current.isSame(startDate, 'day')) return false;
 
     const minDate = startDate.clone().subtract(maxHoursDiff, 'hours');
