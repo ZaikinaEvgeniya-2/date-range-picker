@@ -10,11 +10,14 @@ export const useDateRangePicker = ({ startDate, endDate, maxHoursDiff }) => {
       try {
         if (!current || !endDate) return false;
 
+        // available the same date with diff time
+        const currentWithEndTime = setSameTime(current, endDate);
+
         let isTooEarly = false;
-        const isTooLate = endDate.diff(current, 'hours') < 0;
+        const isTooLate = endDate.diff(currentWithEndTime, 'hours') < 0;
 
         if (maxHoursDiff) {
-          isTooEarly = endDate.diff(current, 'hours') > maxHoursDiff;
+          isTooEarly = endDate.diff(currentWithEndTime, 'hours') > maxHoursDiff;
         }
 
         return isTooEarly || isTooLate;
@@ -31,11 +34,15 @@ export const useDateRangePicker = ({ startDate, endDate, maxHoursDiff }) => {
       try {
         if (!current || !startDate) return false;
 
-        const isTooEarly = current.diff(startDate, 'hours') < 0;
+        // available the same date with diff time
+        const currentWithStartTime = setSameTime(current, startDate);
+
+        const isTooEarly = currentWithStartTime.diff(startDate, 'hours') < 0;
         let isTooLate = false;
 
         if (maxHoursDiff) {
-          isTooLate = current.diff(startDate, 'hours') > maxHoursDiff;
+          isTooLate =
+            currentWithStartTime.diff(startDate, 'hours') > maxHoursDiff;
         }
 
         return isTooEarly || isTooLate;
@@ -51,16 +58,27 @@ export const useDateRangePicker = ({ startDate, endDate, maxHoursDiff }) => {
     (current) => {
       try {
         if (!current || !endDate) return false;
-        if (!current.isSame(endDate, 'day')) return false;
 
-        const maxDate = endDate.clone().add(maxHoursDiff, 'hours');
+        const minDate = moment(endDate).clone().subtract(maxHoursDiff, 'hours');
 
-        // missing min day time
-        return {
-          disabledHours: () => range(0, 24).splice(maxDate.hour() + 1, 24),
-          disabledMinutes: () => range(0, 60).splice(maxDate.minute() + 1, 60),
-          disabledSeconds: () => range(0, 60).splice(maxDate.second(), 60),
-        };
+        if (current.isSame(endDate, 'day')) {
+          return {
+            disabledHours: () => range(0, 24).splice(minDate.hour() + 1, 24),
+            disabledMinutes: () =>
+              range(0, 60).splice(minDate.minute() + 1, 60),
+            disabledSeconds: () => range(0, 60).splice(minDate.second(), 60),
+          };
+        }
+
+        if (current.isSame(minDate, 'day')) {
+          return {
+            disabledHours: () => range(0, 24).splice(0, minDate.hour()),
+            disabledMinutes: () => range(0, 60).splice(0, minDate.minute()),
+            disabledSeconds: () => range(0, 60).splice(0, minDate.second()),
+          };
+        }
+
+        return false;
       } catch (error) {
         console.error('checkStartTime error: ', error);
         return false;
@@ -73,16 +91,28 @@ export const useDateRangePicker = ({ startDate, endDate, maxHoursDiff }) => {
     (current) => {
       try {
         if (!current || !startDate) return false;
-        if (!current.isSame(startDate, 'day')) return false;
 
-        const minDate = startDate.clone().subtract(maxHoursDiff, 'hours');
+        const maxDate = moment(startDate).clone().add(maxHoursDiff, 'hours');
 
-        // missing max day time
-        return {
-          disabledHours: () => range(0, 24).splice(0, minDate.hour()),
-          disabledMinutes: () => range(0, 60).splice(0, minDate.minute()),
-          disabledSeconds: () => range(0, 60).splice(0, minDate.second() + 1),
-        };
+        if (current.isSame(startDate, 'day')) {
+          return {
+            disabledHours: () => range(0, 24).splice(0, maxDate.hour()),
+            disabledMinutes: () => range(0, 60).splice(0, maxDate.minute()),
+            disabledSeconds: () => range(0, 60).splice(0, maxDate.second() + 1),
+          };
+        }
+
+        if (current.isSame(maxDate, 'day')) {
+          return {
+            disabledHours: () => range(0, 24).splice(maxDate.hour() + 1, 24),
+            disabledMinutes: () =>
+              range(0, 60).splice(maxDate.minute() + 1, 60),
+            disabledSeconds: () =>
+              range(0, 60).splice(maxDate.second() + 1, 60),
+          };
+        }
+
+        return false;
       } catch (error) {
         console.error('checkEndTime error: ', error);
         return false;
@@ -91,22 +121,46 @@ export const useDateRangePicker = ({ startDate, endDate, maxHoursDiff }) => {
     [startDate, maxHoursDiff]
   );
 
+  // @TODO: rename
   const startDateLimited = useCallback(
     (newStartDate) => {
-      return (
-        endDate &&
-        (newStartDate.isAfter(endDate) || newStartDate.isSame(endDate))
-      );
+      if (!endDate) {
+        return newStartDate;
+      }
+
+      if (newStartDate.isSame(endDate) || newStartDate.isAfter(endDate)) {
+        return moment(endDate).clone().subtract(1, 'second');
+      }
+
+      const minDate = moment(endDate).clone().subtract(maxHoursDiff, 'hours');
+
+      if (newStartDate.isSame(minDate) || newStartDate.isBefore(minDate)) {
+        return minDate;
+      }
+
+      return newStartDate;
     },
     [endDate]
   );
 
+  // @TODO: rename
   const endDateLimited = useCallback(
     (newEndDate) => {
-      return (
-        startDate &&
-        (newEndDate.isBefore(startDate) || newEndDate.isSame(startDate))
-      );
+      if (!startDate) {
+        return newEndDate;
+      }
+
+      if (newEndDate.isSame(startDate) || newEndDate.isBefore(startDate)) {
+        return moment(startDate).clone().add(1, 'second');
+      }
+
+      const maxDate = moment(startDate).clone().add(maxHoursDiff, 'hours');
+
+      if (newEndDate.isSame(maxDate) || newEndDate.isAfter(maxDate)) {
+        return maxDate;
+      }
+
+      return newEndDate;
     },
     [startDate]
   );
@@ -138,6 +192,14 @@ useDateRangePicker.propTypes = {
   startDate: PropTypes.object,
   endDate: PropTypes.object,
   maxHoursDiff: PropTypes.number,
+};
+
+const setSameTime = (current, date) => {
+  return current
+    .clone()
+    .set('hour', date.hour())
+    .set('minute', date.minute())
+    .set('seconds', date.second());
 };
 
 const range = (start, end) => {
