@@ -11,6 +11,7 @@ export const App = () => {
     console.log('value', value);
     console.log('option', option);
   };
+
   return (
     <div style={{ width: '400px' }}>
       <div
