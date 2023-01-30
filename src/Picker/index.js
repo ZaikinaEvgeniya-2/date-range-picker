@@ -7,8 +7,8 @@ import { DateRangePicker } from './DateRangePicker';
 
 export const Picker = ({
   options = DEFAULT_OPTIONS,
-  onChange,
   value,
+  onChange,
   enableEmptySelection = true,
   enableCustomDate = true,
   ...props
@@ -28,8 +28,8 @@ export const Picker = ({
   );
 
   const onCustomDateSelect = useCallback(
-    (dateRange) => {
-      onSelect({ ...CUSTOM_OPTION, value: dateRange });
+    (newDateRange) => {
+      onSelect({ ...CUSTOM_OPTION, value: newDateRange });
     },
     [onSelect]
   );
@@ -75,6 +75,7 @@ export const Picker = ({
 
 Picker.propTypes = {
   options: PropTypes.arrayOf(OptionType),
+  defaultValue: OptionType,
   value: OptionType,
   onChange: PropTypes.func,
   enableEmptySelection: PropTypes.bool,
