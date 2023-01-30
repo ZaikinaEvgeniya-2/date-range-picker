@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Picker } from './Picker';
-import { CustomDaysDropdown } from './old';
+import { CustomDaysDropdown as OldPicker } from './old';
 import './App.css';
 
 export const App = () => {
@@ -11,7 +11,6 @@ export const App = () => {
     console.log('value', value);
     console.log('option', option);
   };
-
   return (
     <div style={{ width: '400px' }}>
       <div
@@ -24,7 +23,7 @@ export const App = () => {
         <Picker value={value} onChange={onChange} />
       </div>
 
-      <CustomDaysDropdown />
+      <OldPicker />
     </div>
   );
 };
