@@ -38,8 +38,8 @@ export const DateRangePicker = ({
     disabledStartTime,
     disabledEndTime,
 
-    startDateLimited,
-    endDateLimited,
+    getAvailableStartDate,
+    getAvailableEndDate,
   } = useDateRangePicker({ startDate, endDate, maxHoursDiff });
 
   const onRangeChange = useCallback(
@@ -53,22 +53,22 @@ export const DateRangePicker = ({
 
   const onStartDateChange = useCallback(
     (newStartDate) => {
-      const res = startDateLimited(newStartDate);
+      const res = getAvailableStartDate(newStartDate);
 
       setStartDate(res);
       onRangeChange(res, endDate);
     },
-    [endDate, onRangeChange, startDateLimited]
+    [endDate, onRangeChange, getAvailableStartDate]
   );
 
   const onEndDateChange = useCallback(
     (newEndDate) => {
-      const res = endDateLimited(newEndDate);
+      const res = getAvailableEndDate(newEndDate);
 
       setEndDate(res);
       onRangeChange(startDate, res);
     },
-    [endDateLimited, onRangeChange, startDate]
+    [getAvailableEndDate, onRangeChange, startDate]
   );
 
   const onClear = () => {

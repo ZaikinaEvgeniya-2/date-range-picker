@@ -121,8 +121,7 @@ export const useDateRangePicker = ({ startDate, endDate, maxHoursDiff }) => {
     [startDate, maxHoursDiff]
   );
 
-  // @TODO: rename
-  const startDateLimited = useCallback(
+  const getAvailableStartDate = useCallback(
     (newStartDate) => {
       if (!endDate) {
         return newStartDate;
@@ -143,8 +142,7 @@ export const useDateRangePicker = ({ startDate, endDate, maxHoursDiff }) => {
     [endDate]
   );
 
-  // @TODO: rename
-  const endDateLimited = useCallback(
+  const getAvailableEndDate = useCallback(
     (newEndDate) => {
       if (!startDate) {
         return newEndDate;
@@ -165,14 +163,6 @@ export const useDateRangePicker = ({ startDate, endDate, maxHoursDiff }) => {
     [startDate]
   );
 
-  const getMaxStartDate = useCallback(() => {
-    return endDate.clone().subtract(1, 'second');
-  }, [endDate]);
-
-  const getMaxEndDate = useCallback(() => {
-    return startDate.clone().add(1, 'second');
-  }, [startDate]);
-
   return {
     disabledStartDate,
     disabledEndDate,
@@ -180,11 +170,8 @@ export const useDateRangePicker = ({ startDate, endDate, maxHoursDiff }) => {
     disabledStartTime,
     disabledEndTime,
 
-    startDateLimited,
-    endDateLimited,
-
-    getMaxStartDate,
-    getMaxEndDate,
+    getAvailableStartDate,
+    getAvailableEndDate,
   };
 };
 
