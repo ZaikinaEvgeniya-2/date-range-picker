@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { PropTypes } from 'prop-types';
 import styled from 'styled-components';
 import {
@@ -12,6 +12,7 @@ import { DateRangeType } from '../types';
 import { convertStrToDate, convertDateToStr } from './utils';
 import { StartDatePicker } from './StartDatePicker';
 import { EndDatePicker } from './EndDatePicker';
+import { useDateRangeOutsideClick } from './useDateRangeOutsideClick';
 
 export const DateRangePicker = ({
   value,
@@ -19,6 +20,8 @@ export const DateRangePicker = ({
   onChange,
   onClose,
 }) => {
+  const dateRangePickerRef = useRef(null);
+
   const defaultStartDate = value?.[0];
   const defaultEndDate = value?.[1];
 
@@ -60,11 +63,20 @@ export const DateRangePicker = ({
   const onClear = () => {
     setStartDate();
     setEndDate();
-    onChange([]);
+    onRangeChange([]);
   };
 
+  const returnPrevValue = useCallback(() => {
+    if (!startDate && !endDate && defaultStartDate && defaultEndDate) {
+      setStartDate(convertStrToDate(defaultStartDate));
+      setEndDate(convertStrToDate(defaultEndDate));
+    }
+  }, [startDate, endDate, defaultStartDate, defaultEndDate]);
+
+  useDateRangeOutsideClick(dateRangePickerRef, returnPrevValue);
+
   return (
-    <Container>
+    <Container ref={dateRangePickerRef}>
       <StartDatePicker
         value={startDate}
         onChange={onStartDateChange}
@@ -81,7 +93,7 @@ export const DateRangePicker = ({
 
       <PickerButtons>
         <CalendarOutlined style={iconStyle} />
-        {startDate || endDate ? (
+        {startDate && endDate ? (
           <ClearButton onClick={onClear} style={iconStyle} />
         ) : null}
       </PickerButtons>
