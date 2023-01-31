@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { PropTypes } from 'prop-types';
-import { DatePicker } from 'antd';
 import styled from 'styled-components';
 import {
   SwapRightOutlined,
@@ -10,65 +9,47 @@ import {
 } from '@ant-design/icons';
 import { MAX_HOURS_DIFF } from '../constant';
 import { DateRangeType } from '../types';
-import {
-  useDateRangePicker,
-  convertStrToDate,
-  convertDateToStr,
-} from './useDateRangePicker';
+import { convertStrToDate, convertDateToStr } from './utils';
+import { StartDatePicker } from './StartDatePicker';
+import { EndDatePicker } from './EndDatePicker';
 
 export const DateRangePicker = ({
   value,
   maxHoursDiff = MAX_HOURS_DIFF, // does not change the existing date if dynamic change
   onChange,
-  showTime = true,
   onClose,
 }) => {
-  const [startDate, setStartDate] = useState(convertStrToDate(value[0]));
-  const [endDate, setEndDate] = useState(convertStrToDate(value[1]));
+  const [startDate, setStartDate] = useState(convertStrToDate(value?.[0]));
+  const [endDate, setEndDate] = useState(convertStrToDate(value?.[1]));
 
   useEffect(() => {
-    setStartDate(convertStrToDate(value[0]));
-    setEndDate(convertStrToDate(value[1]));
+    setStartDate(convertStrToDate(value?.[0]));
+    setEndDate(convertStrToDate(value?.[1]));
   }, [value?.[0], value?.[1]]);
 
-  const {
-    disabledStartDate,
-    disabledEndDate,
-
-    disabledStartTime,
-    disabledEndTime,
-
-    getAvailableStartDate,
-    getAvailableEndDate,
-  } = useDateRangePicker({ startDate, endDate, maxHoursDiff });
-
   const onRangeChange = useCallback(
-    (startDate, endDate) => {
-      if (!onChange || !startDate || !endDate) return;
+    (newStartDate, newEndDate) => {
+      if (!onChange || !newStartDate || !newEndDate) return;
 
-      onChange([convertDateToStr(startDate), convertDateToStr(endDate)]);
+      onChange([convertDateToStr(newStartDate), convertDateToStr(newEndDate)]);
     },
     [onChange]
   );
 
   const onStartDateChange = useCallback(
     (newStartDate) => {
-      const res = getAvailableStartDate(newStartDate);
-
-      setStartDate(res);
-      onRangeChange(res, endDate);
+      setStartDate(newStartDate);
+      onRangeChange(newStartDate, endDate);
     },
-    [endDate, onRangeChange, getAvailableStartDate]
+    [endDate, onRangeChange]
   );
 
   const onEndDateChange = useCallback(
     (newEndDate) => {
-      const res = getAvailableEndDate(newEndDate);
-
-      setEndDate(res);
-      onRangeChange(startDate, res);
+      setEndDate(newEndDate);
+      onRangeChange(startDate, newEndDate);
     },
-    [getAvailableEndDate, onRangeChange, startDate]
+    [onRangeChange, startDate]
   );
 
   const onClear = () => {
@@ -79,28 +60,18 @@ export const DateRangePicker = ({
 
   return (
     <Container>
-      <DatePicker
-        placeholder="Start date"
+      <StartDatePicker
         value={startDate}
         onChange={onStartDateChange}
-        disabledDate={disabledStartDate}
-        disabledTime={disabledStartTime}
-        showTime={showTime}
-        showNow={false}
-        allowClear={false}
-        suffixIcon={false}
+        endDate={endDate}
+        maxHoursDiff={maxHoursDiff}
       />
       <SwapRightOutlined style={iconStyle} />
-      <DatePicker
-        placeholder="End date"
+      <EndDatePicker
         value={endDate}
         onChange={onEndDateChange}
-        disabledDate={disabledEndDate}
-        disabledTime={disabledEndTime}
-        showTime={showTime}
-        showNow={false}
-        allowClear={false}
-        suffixIcon={false}
+        startDate={startDate}
+        maxHoursDiff={maxHoursDiff}
       />
 
       <PickerButtons>
@@ -119,7 +90,6 @@ DateRangePicker.propTypes = {
   value: DateRangeType,
   maxHoursDiff: PropTypes.number,
   onChange: PropTypes.func,
-  showTime: PropTypes.bool,
   onClose: PropTypes.func,
 };
 
