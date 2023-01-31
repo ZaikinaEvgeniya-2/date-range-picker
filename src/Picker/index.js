@@ -1,30 +1,47 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { PropTypes } from 'prop-types';
-import { DEFAULT_OPTIONS, EMPTY_OPTION, CUSTOM_OPTION } from './constant';
+import { DEFAULT_OPTIONS, CUSTOM_OPTION } from './constant';
 import { OptionType } from './types';
 import { DropdownPicker } from './DropdownPicker';
 import { DateRangePicker } from './DateRangePicker';
 
 export const Picker = ({
   options = DEFAULT_OPTIONS,
+  defaultValue,
   value,
   onChange,
-  enableEmptySelection = true,
   enableCustomDate = true,
   ...props
 }) => {
-  const [selectedOption, setSelectedOption] = useState(value);
+  const initialSelectedOptionValue = value?.value || defaultValue?.value;
+
+  const [selectedOption, setSelectedOption] = useState(value || defaultValue);
 
   useEffect(() => {
-    setSelectedOption(value);
-  }, [value?.value]);
+    setSelectedOption(value || defaultValue);
+  }, [initialSelectedOptionValue]);
+
+  const onSave = useCallback(
+    (newSelectedOption) => {
+      if (
+        !onChange ||
+        !newSelectedOption?.value ||
+        isCustomRangeEmptyValue(newSelectedOption)
+      ) {
+        return;
+      }
+
+      onChange(newSelectedOption.value, newSelectedOption);
+    },
+    [onChange]
+  );
 
   const onSelect = useCallback(
     (newSelectedOption) => {
       setSelectedOption(newSelectedOption);
-      onChange && onChange(newSelectedOption?.value, newSelectedOption);
+      onSave(newSelectedOption);
     },
-    [onChange]
+    [onSave]
   );
 
   const onCustomDateSelect = useCallback(
@@ -35,22 +52,18 @@ export const Picker = ({
   );
 
   const onClear = useCallback(() => {
-    onSelect();
-  }, [onSelect]);
+    onSelect(defaultValue);
+  }, [onSelect, defaultValue]);
 
   const items = useMemo(() => {
     let res = options;
-
-    if (enableEmptySelection) {
-      res = [EMPTY_OPTION, ...res];
-    }
 
     if (enableCustomDate) {
       res = [...res, CUSTOM_OPTION];
     }
 
     return res;
-  }, [enableCustomDate, enableEmptySelection, options]);
+  }, [enableCustomDate, options]);
 
   if (selectedOption?.key === CUSTOM_OPTION.key) {
     return (
@@ -67,7 +80,6 @@ export const Picker = ({
     <DropdownPicker
       options={items}
       selectedOption={selectedOption}
-      placeholder={EMPTY_OPTION.label}
       onSelect={onSelect}
     />
   );
@@ -80,4 +92,11 @@ Picker.propTypes = {
   onChange: PropTypes.func,
   enableEmptySelection: PropTypes.bool,
   enableCustomDate: PropTypes.bool,
+};
+
+const isCustomRangeEmptyValue = (newSelectedOption) => {
+  return (
+    newSelectedOption?.key === CUSTOM_OPTION.key &&
+    newSelectedOption?.value?.length !== 2
+  );
 };

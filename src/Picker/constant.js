@@ -21,12 +21,6 @@ export const DEFAULT_OPTIONS = [
   },
 ];
 
-export const EMPTY_OPTION = {
-  key: 'none',
-  value: undefined,
-  label: 'None',
-};
-
 export const CUSTOM_OPTION = {
   key: 'custom',
   value: [],

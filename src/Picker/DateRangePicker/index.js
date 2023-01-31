@@ -19,13 +19,18 @@ export const DateRangePicker = ({
   onChange,
   onClose,
 }) => {
-  const [startDate, setStartDate] = useState(convertStrToDate(value?.[0]));
-  const [endDate, setEndDate] = useState(convertStrToDate(value?.[1]));
+  const defaultStartDate = value?.[0];
+  const defaultEndDate = value?.[1];
+
+  const [startDate, setStartDate] = useState(
+    convertStrToDate(defaultStartDate)
+  );
+  const [endDate, setEndDate] = useState(convertStrToDate(defaultEndDate));
 
   useEffect(() => {
-    setStartDate(convertStrToDate(value?.[0]));
-    setEndDate(convertStrToDate(value?.[1]));
-  }, [value?.[0], value?.[1]]);
+    setStartDate(convertStrToDate(defaultStartDate));
+    setEndDate(convertStrToDate(defaultEndDate));
+  }, [defaultStartDate, defaultEndDate]);
 
   const onRangeChange = useCallback(
     (newStartDate, newEndDate) => {
