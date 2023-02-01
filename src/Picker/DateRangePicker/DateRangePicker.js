@@ -13,6 +13,7 @@ import { convertStrToDate, convertDateToStr } from './utils';
 import { StartDatePicker } from './StartDatePicker';
 import { EndDatePicker } from './EndDatePicker';
 import { useDateRangeOutsideClick } from './useDateRangeOutsideClick';
+import { useDateRangePickerControl } from './useDateRangePickerControl';
 
 export const DateRangePicker = ({
   value,
@@ -21,6 +22,8 @@ export const DateRangePicker = ({
   onClose,
 }) => {
   const dateRangePickerRef = useRef(null);
+  const startDatePickerRef = useRef(null);
+  const endDatePickerRef = useRef(null);
 
   const initialStartDate = value?.[0];
   const initialEndDate = value?.[1];
@@ -66,6 +69,18 @@ export const DateRangePicker = ({
     onSave([]);
   };
 
+  const {
+    isStartDatePickerOpen,
+    isEndDatePickerOpen,
+    onStartDatePickerOpenChange,
+    onEndDatePickerOpenChange,
+  } = useDateRangePickerControl({
+    startDatePickerRef,
+    endDatePickerRef,
+    startDate,
+    endDate,
+  });
+
   const setPrevSavedValues = useCallback(() => {
     if (!startDate && initialStartDate) {
       setStartDate(convertStrToDate(initialStartDate));
@@ -80,19 +95,25 @@ export const DateRangePicker = ({
   return (
     <Container ref={dateRangePickerRef}>
       <StartDatePicker
+        ref={startDatePickerRef}
         value={startDate}
         onChange={onStartDateChange}
         endDate={endDate}
         maxHoursDiff={maxHoursDiff}
+        open={isStartDatePickerOpen}
+        onOpenChange={onStartDatePickerOpenChange}
       />
 
       <SwapRightOutlined style={iconStyle} />
 
       <EndDatePicker
+        ref={endDatePickerRef}
         value={endDate}
         onChange={onEndDateChange}
         startDate={startDate}
         maxHoursDiff={maxHoursDiff}
+        open={isEndDatePickerOpen}
+        onOpenChange={onEndDatePickerOpenChange}
       />
 
       <PickerButtons>
