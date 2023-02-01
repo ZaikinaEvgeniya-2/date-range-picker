@@ -9,11 +9,17 @@ const DEFAULT_VALUE = {
   label: 'Last 24 hrs',
 };
 
-const VALUE = {
-  key: '7',
-  value: 168,
-  label: 'Last 7 days',
-};
+// const VALUE = {
+//   key: '7',
+//   value: 168,
+//   label: 'Last 7 days',
+// };
+
+// const CUSTOM_VALUE = {
+//   key: 'custom',
+//   value: ['1675933083', '1676537883'],
+//   label: 'Custom',
+// };
 
 export const App = () => {
   const onChange1 = (value, option) => {
@@ -52,10 +58,10 @@ export const App = () => {
   // useEffect(() => {
   //   setTimeout(() => {
   //     console.log('SET');
-  //     setValue2(VALUE);
-  //     setValue3(VALUE);
-  //     setValue4(VALUE);
-  //     setValue5(VALUE);
+  //     setValue2(CUSTOM_VALUE);
+  //     setValue3(CUSTOM_VALUE);
+  //     setValue4(CUSTOM_VALUE);
+  //     setValue5(CUSTOM_VALUE);
   //   }, 10000);
   // }, []);
 
@@ -68,22 +74,23 @@ export const App = () => {
           alignItems: 'flex-end',
         }}
       >
-        <Picker />
+        {/* <Picker /> */}
         <Picker defaultValue={DEFAULT_VALUE} onChange={onChange1} />
-        <Picker
+        {/* <Picker
           defaultValue={DEFAULT_VALUE}
           value={value2}
           onChange={onChange2}
         />
+
         <Picker value={value3} onChange={onChange3} />
 
-        <p>with default </p>
+        <p>with default </p> */}
         <Picker
           defaultValue={DEFAULT_VALUE}
           value={value4}
           onChange={onChange4}
         />
-        <Picker value={value5} onChange={onChange5} />
+        {/* <Picker value={value5} onChange={onChange5} /> */}
       </div>
 
       <p>old</p>
