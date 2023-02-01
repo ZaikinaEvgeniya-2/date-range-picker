@@ -10,20 +10,23 @@ export const useDateRangeOutsideClick = (ref, onOutsideClick) => {
     ];
   }, [ref]);
 
-  const handleClickOutside = useCallback(() => {
-    let isConcernedElementClick = false;
+  const handleClickOutside = useCallback(
+    (event) => {
+      let isConcernedElementClick = false;
 
-    for (let i = 0; i < concernedElements()?.length; i++) {
-      if (concernedElements()[i]?.contains(event.target)) {
-        isConcernedElementClick = true;
-        continue;
+      for (let i = 0; i < concernedElements()?.length; i++) {
+        if (concernedElements()[i]?.contains(event.target)) {
+          isConcernedElementClick = true;
+          continue;
+        }
       }
-    }
 
-    if (!isConcernedElementClick) {
-      onOutsideClick && onOutsideClick();
-    }
-  }, [concernedElements, onOutsideClick]);
+      if (!isConcernedElementClick) {
+        onOutsideClick && onOutsideClick();
+      }
+    },
+    [concernedElements, onOutsideClick]
+  );
 
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
