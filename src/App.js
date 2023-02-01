@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Picker } from './Picker';
 import { CustomDaysDropdown as OldPicker } from './old';
 import './App.css';
@@ -27,19 +27,19 @@ export const App = () => {
     console.log('option1', option);
   };
 
-  const [value2, setValue2] = useState();
-  const onChange2 = (value, option) => {
-    setValue2(option);
-    console.log('value2', value);
-    console.log('option2', option);
-  };
+  // const [value2, setValue2] = useState();
+  // const onChange2 = (value, option) => {
+  //   setValue2(option);
+  //   console.log('value2', value);
+  //   console.log('option2', option);
+  // };
 
-  const [value3, setValue3] = useState();
-  const onChange3 = (value, option) => {
-    setValue3(option);
-    console.log('value3', value);
-    console.log('option3', option);
-  };
+  // const [value3, setValue3] = useState();
+  // const onChange3 = (value, option) => {
+  //   setValue3(option);
+  //   console.log('value3', value);
+  //   console.log('option3', option);
+  // };
 
   const [value4, setValue4] = useState(DEFAULT_VALUE);
   const onChange4 = (value, option) => {
@@ -48,12 +48,12 @@ export const App = () => {
     console.log('option4', option);
   };
 
-  const [value5, setValue5] = useState(DEFAULT_VALUE);
-  const onChange5 = (value, option) => {
-    setValue5(option);
-    console.log('value5', value);
-    console.log('option5', option);
-  };
+  // const [value5, setValue5] = useState(DEFAULT_VALUE);
+  // const onChange5 = (value, option) => {
+  //   setValue5(option);
+  //   console.log('value5', value);
+  //   console.log('option5', option);
+  // };
 
   // useEffect(() => {
   //   setTimeout(() => {
