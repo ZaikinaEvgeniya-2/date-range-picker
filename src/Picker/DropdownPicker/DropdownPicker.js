@@ -10,7 +10,7 @@ const { Text } = Typography;
 export const DropdownPicker = ({
   options,
   selectedOption,
-  placeholder,
+  placeholder = '',
   onSelect,
 }) => {
   const getSelectableItem = useCallback(

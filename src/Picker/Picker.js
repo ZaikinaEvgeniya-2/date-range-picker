@@ -20,31 +20,25 @@ export const Picker = ({
   }, [value, defaultValue]);
 
   const onSave = useCallback(
-    (newSelectedOption) => {
-      if (
-        !onChange ||
-        !newSelectedOption?.value ||
-        isCustomRangeEmptyValue(newSelectedOption)
-      ) {
-        return;
-      }
+    (option) => {
+      if (!onChange || isEmptyOptionValue(option)) return;
 
-      onChange(newSelectedOption.value, newSelectedOption);
+      onChange(option.value, option);
     },
     [onChange]
   );
 
   const onSelect = useCallback(
-    (newSelectedOption) => {
-      setSelectedOption(newSelectedOption);
-      onSave(newSelectedOption);
+    (option) => {
+      setSelectedOption(option);
+      onSave(option);
     },
     [onSave]
   );
 
   const onCustomDateSelect = useCallback(
-    (newDateRange) => {
-      onSelect({ ...CUSTOM_OPTION, value: newDateRange });
+    (dateRange) => {
+      onSelect({ ...CUSTOM_OPTION, value: dateRange });
     },
     [onSelect]
   );
@@ -92,9 +86,10 @@ Picker.propTypes = {
   enableCustomDate: PropTypes.bool,
 };
 
-const isCustomRangeEmptyValue = (newSelectedOption) => {
-  return (
-    newSelectedOption?.key === CUSTOM_OPTION.key &&
-    newSelectedOption?.value?.length !== 2
-  );
+const isEmptyOptionValue = (option) => {
+  if (option?.key === CUSTOM_OPTION.key) {
+    return option?.value?.length !== 2;
+  }
+
+  return !option?.value;
 };
