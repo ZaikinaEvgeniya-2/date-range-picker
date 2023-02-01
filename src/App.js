@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Picker } from './Picker';
-import { CustomDaysDropdown as OldPicker } from './old';
 import './App.css';
 
 const DEFAULT_VALUE = {
@@ -92,9 +91,6 @@ export const App = () => {
         />
         {/* <Picker value={value5} onChange={onChange5} /> */}
       </div>
-
-      <p>old</p>
-      <OldPicker />
     </div>
   );
 };
