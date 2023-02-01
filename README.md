@@ -1,4 +1,4 @@
-one-or-range-dates-picker
+# Date range picker
 
-Custom picker that allow select several date options in dropdown or select custom date range in date picker
-Used Ant Design Dropdown and DatePicker v4
+Date range picker allow select range in dropdown with provided options or select custom range in date picker panel.
+Component use the Ant Design v4 Dropdown and DatePicker components.
