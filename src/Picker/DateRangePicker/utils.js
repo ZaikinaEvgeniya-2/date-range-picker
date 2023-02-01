@@ -13,10 +13,12 @@ export const range = (start, end) => {
 
 export const convertStrToDate = (str) => {
   if (!str) return;
+
   return moment.unix(Number(str));
 };
 
 export const convertDateToStr = (date) => {
   if (!date) return;
+
   return toString(moment(date).unix());
 };

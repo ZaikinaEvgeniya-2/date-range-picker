@@ -13,11 +13,13 @@ export const Picker = ({
   enableCustomDate = true,
   ...props
 }) => {
-  const [selectedOption, setSelectedOption] = useState(value || defaultValue);
+  const initialOption = value || defaultValue;
+
+  const [selectedOption, setSelectedOption] = useState(initialOption);
 
   useEffect(() => {
-    setSelectedOption(value || defaultValue);
-  }, [value, defaultValue]);
+    setSelectedOption(initialOption);
+  }, [initialOption]); // triggers an extra renders
 
   const onSave = useCallback(
     (option) => {

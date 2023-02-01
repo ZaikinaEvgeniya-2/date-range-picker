@@ -22,20 +22,20 @@ export const DateRangePicker = ({
 }) => {
   const dateRangePickerRef = useRef(null);
 
-  const defaultStartDate = value?.[0];
-  const defaultEndDate = value?.[1];
+  const initialStartDate = value?.[0];
+  const initialEndDate = value?.[1];
 
   const [startDate, setStartDate] = useState(
-    convertStrToDate(defaultStartDate)
+    convertStrToDate(initialStartDate)
   );
-  const [endDate, setEndDate] = useState(convertStrToDate(defaultEndDate));
+  const [endDate, setEndDate] = useState(convertStrToDate(initialEndDate));
 
   useEffect(() => {
-    setStartDate(convertStrToDate(defaultStartDate));
-    setEndDate(convertStrToDate(defaultEndDate));
-  }, [defaultStartDate, defaultEndDate]);
+    setStartDate(convertStrToDate(initialStartDate));
+    setEndDate(convertStrToDate(initialEndDate));
+  }, [initialStartDate, initialEndDate]);
 
-  const onRangeChange = useCallback(
+  const onSave = useCallback(
     (newStartDate, newEndDate) => {
       if (!onChange || !newStartDate || !newEndDate) return;
 
@@ -47,33 +47,35 @@ export const DateRangePicker = ({
   const onStartDateChange = useCallback(
     (newStartDate) => {
       setStartDate(newStartDate);
-      onRangeChange(newStartDate, endDate);
+      onSave(newStartDate, endDate);
     },
-    [endDate, onRangeChange]
+    [endDate, onSave]
   );
 
   const onEndDateChange = useCallback(
     (newEndDate) => {
       setEndDate(newEndDate);
-      onRangeChange(startDate, newEndDate);
+      onSave(startDate, newEndDate);
     },
-    [onRangeChange, startDate]
+    [onSave, startDate]
   );
 
   const onClear = () => {
     setStartDate();
     setEndDate();
-    onRangeChange([]);
+    onSave([]);
   };
 
-  const returnPrevValue = useCallback(() => {
-    if (!startDate && !endDate && defaultStartDate && defaultEndDate) {
-      setStartDate(convertStrToDate(defaultStartDate));
-      setEndDate(convertStrToDate(defaultEndDate));
+  const setPrevSavedValues = useCallback(() => {
+    if (!startDate && initialStartDate) {
+      setStartDate(convertStrToDate(initialStartDate));
     }
-  }, [startDate, endDate, defaultStartDate, defaultEndDate]);
+    if (!endDate && initialEndDate) {
+      setEndDate(convertStrToDate(initialEndDate));
+    }
+  }, [startDate, endDate, initialStartDate, initialEndDate]);
 
-  useDateRangeOutsideClick(dateRangePickerRef, returnPrevValue);
+  useDateRangeOutsideClick(dateRangePickerRef, setPrevSavedValues);
 
   return (
     <Container ref={dateRangePickerRef}>
@@ -83,7 +85,9 @@ export const DateRangePicker = ({
         endDate={endDate}
         maxHoursDiff={maxHoursDiff}
       />
+
       <SwapRightOutlined style={iconStyle} />
+
       <EndDatePicker
         value={endDate}
         onChange={onEndDateChange}
@@ -93,6 +97,7 @@ export const DateRangePicker = ({
 
       <PickerButtons>
         <CalendarOutlined style={iconStyle} />
+
         {startDate && endDate ? (
           <ClearButton onClick={onClear} style={iconStyle} />
         ) : null}
