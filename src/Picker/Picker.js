@@ -88,10 +88,10 @@ Picker.propTypes = {
   enableCustomDate: PropTypes.bool,
 };
 
-const isEmptyOptionValue = (option) => {
+function isEmptyOptionValue(option) {
   if (option?.key === CUSTOM_OPTION.key) {
     return option?.value?.length !== 2;
   }
 
   return !option?.value;
-};
+}
