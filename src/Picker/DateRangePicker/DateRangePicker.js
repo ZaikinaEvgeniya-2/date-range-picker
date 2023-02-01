@@ -12,7 +12,7 @@ import { DateRangeType } from '../types';
 import { convertStrToDate, convertDateToStr } from './utils';
 import { StartDatePicker } from './StartDatePicker';
 import { EndDatePicker } from './EndDatePicker';
-import { useDateRangeOutsideClick, useDateRangePickerControl } from './hooks';
+import { useDateRangeOutsideClick, useDateRangePickerControl } from './hook';
 
 export const DateRangePicker = ({
   value,
