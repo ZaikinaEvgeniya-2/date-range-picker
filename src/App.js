@@ -1,25 +1,34 @@
 import React, { useState } from 'react';
+import styled from 'styled-components';
 import { Picker } from './Picker';
 import './App.css';
 
-const DEFAULT_VALUE = {
+const DEFAULT_RANGE = {
   key: '3',
   value: 72,
   label: 'Last 3 days',
 };
 
 export const App = () => {
-  const [value, setValue] = useState();
+  const [range, setRange] = useState();
 
-  function onChange(value, option) {
-    setValue(option);
+  function onRangeChange(value, option) {
+    setRange(option);
     console.log('value', value);
     console.log('option', option);
   }
 
   return (
-    <div style={{ width: '400px' }}>
-      <Picker defaultValue={DEFAULT_VALUE} value={value} onChange={onChange} />
-    </div>
+    <Container>
+      <Picker
+        defaultValue={DEFAULT_RANGE}
+        value={range}
+        onChange={onRangeChange}
+      />
+    </Container>
   );
 };
+
+const Container = styled.div`
+  width: 400px;
+`;
