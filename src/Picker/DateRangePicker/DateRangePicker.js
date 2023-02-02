@@ -16,7 +16,7 @@ import { useDateRangeOutsideClick, useDateRangePickerControl } from './hook';
 
 export const DateRangePicker = ({
   value,
-  maxHoursDiff = MAX_HOURS_DIFF, // does not change the existing date if dynamic change
+  maxHoursDiff = MAX_HOURS_DIFF, // does not change the current date if dynamic change
   onChange,
   onClose,
 }) => {
