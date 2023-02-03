@@ -1,18 +1,16 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { PropTypes } from 'prop-types';
-import styled from 'styled-components';
 import {
-  SwapRightOutlined,
-  CalendarOutlined,
-  CloseCircleOutlined,
-  CloseOutlined,
-} from '@ant-design/icons';
+  DateRangeContainer,
+  StartDatePicker,
+  EndDatePicker,
+  DateRangeControls,
+  SeparateIcon,
+} from './components';
+import { useDateRangeOutsideClick, useDateRangePickerControl } from './hook';
+import { convertStrToDate, convertDateToStr } from './utils';
 import { MAX_HOURS_DIFF } from '../constant';
 import { DateRangeType } from '../types';
-import { convertStrToDate, convertDateToStr } from './utils';
-import { StartDatePicker } from './StartDatePicker';
-import { EndDatePicker } from './EndDatePicker';
-import { useDateRangeOutsideClick, useDateRangePickerControl } from './hook';
 
 export const DateRangePicker = ({
   value,
@@ -92,7 +90,7 @@ export const DateRangePicker = ({
   useDateRangeOutsideClick(dateRangePickerRef, setPrevSavedValues);
 
   return (
-    <Container ref={dateRangePickerRef}>
+    <DateRangeContainer ref={dateRangePickerRef}>
       <StartDatePicker
         ref={startDatePickerRef}
         value={startDate}
@@ -103,7 +101,7 @@ export const DateRangePicker = ({
         onOpenChange={onStartDatePickerOpenChange}
       />
 
-      <SwapRightOutlined style={iconStyle} />
+      <SeparateIcon />
 
       <EndDatePicker
         ref={endDatePickerRef}
@@ -115,16 +113,12 @@ export const DateRangePicker = ({
         onOpenChange={onEndDatePickerOpenChange}
       />
 
-      <PickerButtons>
-        <CalendarOutlined style={iconStyle} />
-
-        {startDate && endDate ? (
-          <ClearButton onClick={onClear} style={iconStyle} />
-        ) : null}
-      </PickerButtons>
-
-      {onClose ? <CloseOutlined style={iconStyle} onClick={onClose} /> : null}
-    </Container>
+      <DateRangeControls
+        clearDisabled={!startDate || !endDate}
+        onClear={onClear}
+        onClose={onClose}
+      />
+    </DateRangeContainer>
   );
 };
 
@@ -134,58 +128,3 @@ DateRangePicker.propTypes = {
   onChange: PropTypes.func,
   onClose: PropTypes.func,
 };
-
-const iconStyle = { color: '#bfbfbf' };
-
-const Container = styled.div`
-  display: flex;
-  align-items: center;
-  border: 1px solid rgba(2, 9, 28, 0.28);
-  border-radius: 4px;
-  padding: 0;
-  width: fit-content;
-  padding: 0 5px;
-
-  .ant-picker {
-    border: none;
-    border-bottom: 2px solid transparent;
-    transition: border-bottom-color 0.3s;
-
-    &:hover,
-    &:focus,
-    &.ant-picker-focused {
-      box-shadow: none;
-    }
-
-    &:hover,
-    &:focus {
-      border-bottom: 2px solid transparent;
-    }
-
-    &.ant-picker-focused {
-      border-bottom: 2px solid #1890ff;
-    }
-  }
-`;
-
-const PickerButtons = styled.div`
-  position: relative;
-  margin: 0 5px;
-`;
-
-const ClearButton = styled(CloseCircleOutlined)`
-  position: absolute;
-  top: 50%;
-  right: 0;
-  color: rgba(0, 0, 0, 0.25);
-  line-height: 1;
-  background: #fff;
-  transform: translateY(-50%);
-  opacity: 0;
-  transition: opacity 0.3s, color 0.3s;
-
-  &:hover {
-    opacity: 1;
-    color: black;
-  }
-`;

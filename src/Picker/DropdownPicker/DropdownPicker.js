@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { DownOutlined } from '@ant-design/icons';
 import { Dropdown, Typography } from 'antd';
 import { OptionType } from '../types';
+import { theme } from '../theme';
 
 const { Text } = Typography;
 
@@ -54,11 +55,10 @@ DropdownPicker.propTypes = {
 const DropdownButton = styled.button`
   background-color: #ffffff;
   display: flex;
-  padding: 0 12px;
   justify-content: space-between;
   align-items: center;
-  border: 1px solid rgba(2, 9, 28, 0.28);
-  border-radius: 4px;
+  border: ${theme.border};
+  border-radius: ${theme.borderRadius};
   min-width: 150px;
   min-height: 40px;
 
