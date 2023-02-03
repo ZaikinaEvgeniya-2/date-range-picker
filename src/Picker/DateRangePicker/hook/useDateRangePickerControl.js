@@ -35,22 +35,19 @@ export const useDateRangePickerControl = ({
     if (!startDate) {
       return openStartPicker();
     }
+
     if (!endDate) {
       openEndPicker();
     }
   }, [endDate, startDate, openStartPicker, openEndPicker]);
 
   const onStartDatePickerOpenChange = useCallback(
-    (open) => {
-      open ? openStartPicker() : closeStartPicker();
-    },
+    (open) => (open ? openStartPicker() : closeStartPicker()),
     [openStartPicker, closeStartPicker]
   );
 
   const onEndDatePickerOpenChange = useCallback(
-    (open) => {
-      open ? openEndPicker() : closeEndPicker();
-    },
+    (open) => (open ? openEndPicker() : closeEndPicker()),
     [openEndPicker, closeEndPicker]
   );
 

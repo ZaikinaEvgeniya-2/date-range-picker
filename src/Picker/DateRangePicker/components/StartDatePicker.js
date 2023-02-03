@@ -61,9 +61,7 @@ export const StartDatePicker = forwardRef(
     const getAvailableStartDate = useCallback(
       (current) => {
         try {
-          if (!current) {
-            return current;
-          }
+          if (!current) return;
 
           if (
             minDate &&
