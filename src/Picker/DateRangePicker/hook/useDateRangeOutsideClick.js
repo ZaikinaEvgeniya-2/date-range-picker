@@ -1,12 +1,12 @@
 import { useCallback, useEffect } from 'react';
 
-const antDatePickerPanelClass = 'ant-picker-dropdown';
+const ANT_DATE_PICKER_PANEL_CLASS = 'ant-picker-dropdown';
 
 export const useDateRangeOutsideClick = (ref, onOutsideClick) => {
   const concernedElements = useCallback(() => {
     return [
       ref.current,
-      ...document.getElementsByClassName(antDatePickerPanelClass),
+      ...document.getElementsByClassName(ANT_DATE_PICKER_PANEL_CLASS),
     ];
   }, [ref]);
 

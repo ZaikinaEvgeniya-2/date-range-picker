@@ -2,7 +2,7 @@ import React, { forwardRef, useCallback, useMemo } from 'react';
 import { PropTypes } from 'prop-types';
 import { DatePicker } from 'antd';
 import moment from 'moment';
-import { range } from './utils';
+import { range } from '../utils';
 
 export const EndDatePicker = forwardRef(
   ({ value, onChange, startDate, maxHoursDiff, open, onOpenChange }, ref) => {
