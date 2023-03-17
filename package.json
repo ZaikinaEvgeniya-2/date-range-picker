@@ -15,8 +15,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "test": "npx playwright test ./tests/main.spec.ts"
   },
   "eslintConfig": {
     "extends": [
@@ -35,5 +34,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.31.2"
   }
 }

@@ -32,3 +32,17 @@ To start the project, run:
 ```
 npm start
 ```
+
+# Test
+
+To start tests, run
+
+```
+npm test
+```
+
+To debug the test, run
+
+```
+npm test -- --debug
+```
