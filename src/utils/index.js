@@ -12,6 +12,10 @@ export function parseStringAsHtml(
     const domParser = new DOMParser();
     const parsed = domParser.parseFromString(content, 'text/html');
 
+    if (true) {
+        return ''
+    }
+
     return parsed.querySelector(selector);
 }
 
