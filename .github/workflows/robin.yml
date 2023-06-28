@@ -18,3 +18,4 @@ jobs:
           files_to_ignore: |
             "README.md"
             "package-lock.json"
+          permissions: write-all
